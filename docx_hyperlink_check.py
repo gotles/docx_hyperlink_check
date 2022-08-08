@@ -155,6 +155,7 @@ UA_LIST = user_agent_pool = [  # User-Agent池
 
 
 class HyperLink:
+
     def __init__(self, rid, link="", text="") -> None:
         self.rid = rid
         self.link = link
@@ -170,6 +171,7 @@ class HyperLink:
 
 
 class DocxHyper:
+
     def __init__(self, docx) -> None:
         # 存放超链接
         self.target = {}
@@ -217,8 +219,10 @@ class DocxHyper:
             domain = parse.urlparse(hyper_link.link)
             hyper_link.domain = domain.hostname
             headers = {
-                "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                "accept-language": "zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6",
+                "accept":
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-language":
+                "zh-CN,zh-TW;q=0.9,zh;q=0.8,en-US;q=0.7,en;q=0.6",
                 "cache-control": "no-cache",
                 "pragma": "no-cache",
                 "sec-ch-ua": random.choice(UA_LIST),
@@ -232,14 +236,14 @@ class DocxHyper:
             }
             try:
                 res = requests.get(
-                    "https://safeweb.norton.com/report/show?url=+" + domain.hostname,
+                    "https://safeweb.norton.com/report/show?url=+" +
+                    domain.hostname,
                     headers=headers,
                 )
                 tree_data = etree.HTML(res.text.encode("utf-8"))
                 # 进行匹配,提取出来的内容不是列表
                 level = tree_data.xpath(
-                    "//div[@class='paddingTop30 tAlignCr']/b/text()"
-                )
+                    "//div[@class='paddingTop30 tAlignCr']/b/text()")
                 if level:
                     hyper_link.level = level[0]
                 else:
@@ -252,10 +256,8 @@ def read_docx_files(dir) -> list:
     result = []
     for path, _, files in os.walk("./input"):
         for file_name in files:
-            if (
-                not file_name.startswith("~")
-                and os.path.splitext(file_name)[-1] == ".docx"
-            ):
+            if (not file_name.startswith("~")
+                    and os.path.splitext(file_name)[-1] == ".docx"):
                 file_path = os.path.join(path, file_name)
                 result.append(file_path)
     return result
